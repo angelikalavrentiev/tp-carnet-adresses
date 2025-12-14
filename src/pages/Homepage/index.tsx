@@ -1,4 +1,4 @@
-import { useReducer, useEffect } from "react";
+import { useReducer, useEffect, useState } from "react";
 import Footer from "../../layout/Footer";
 import Header from "../../layout/Header";
 import Form from "../../components/organism/Form";
@@ -15,6 +15,7 @@ import { loadContacts, saveContacts } from "../../store/localStorage";
 
 const Homepage = () => {
     const [contacts, dispatch] = useReducer(contactReducer, []);
+    const [editingContact, setEditingContact] = useState<Contact | null>(null);
 
     useEffect(() => {
         dispatch({ type: "SET_CONTACTS", payload: loadContacts() });
@@ -28,6 +29,20 @@ const Homepage = () => {
         dispatch({ type: "ADD_CONTACT", payload: contact });
     };
 
+    const handleEditContact = (contact: Contact) => {
+        setEditingContact(contact);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleUpdateContact = (contact: Contact) => {
+        dispatch({ type: "UPDATE_CONTACT", payload: contact });
+        setEditingContact(null);
+    };
+
+    const handleCancelEdit = () => {
+        setEditingContact(null);
+    };
+
     const handleRemoveContact = (id: number) => {
         dispatch({ type: "REMOVE_CONTACT", payload: id });
     };
@@ -38,7 +53,9 @@ const Homepage = () => {
         <Header title="Bienvenue sur le carnet d'adresse" />
 
         <main>
-            <Form handleSubmit={handleAddContact}>
+            <Form handleSubmit={editingContact ? handleUpdateContact : handleAddContact}
+            editingContact={editingContact}  
+            onCancel={handleCancelEdit}>
                 <FormGroup>
                     <FormLabel content="Nom" inputId="name" />
                     <FormInputName inputName="name" inputId="name" />
@@ -88,8 +105,14 @@ const Homepage = () => {
                                             <td>{c.surname}</td>
                                             <td>{c.email}</td>
                                             <td>{c.tel}</td>
-                                            <td>{c.birth}</td>
+                                            <td>{c.birthday}</td>
                                             <td>
+                                                <button 
+                                                    style={{ color: "blue", marginRight: 8 }} 
+                                                    onClick={() => handleEditContact(c)}
+                                                >
+                                                    Modifier
+                                                </button>
                                                 <button style={{ color: "red" }} onClick={() => handleRemoveContact(c.id)}>Supprimer</button>
                                             </td>
                                         </tr>
