@@ -1,14 +1,14 @@
-import { useState, FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import Footer from "../../layout/Footer";
 import Header from "../../layout/Header";
-import Form from "../../organism/Form";
-import FormGroup from "../../molecule/FormGroup";
-import FormLabel from "../../atom/FormLabel";
-import FormInputEmail from "../../atom/FormInputEmail";
-import FormInputName from "../../atom/FormInputName";
-import FormInputSurname from "../../atom/FormInputSurname";
-import FormInputTel from "../../atom/FormInputTel";
-import FormInputBirth from "../../atom/FormInputBirth";
+import Form from "../../components/organism/Form";
+import FormGroup from "../../components/molecule/FormGroup";
+import FormLabel from "../../components/atom/FormLabel";
+import FormInputEmail from "../../components/atom/FormInputEmail";
+import FormInputName from "../../components/atom/FormInputName";
+import FormInputSurname from "../../components/atom/FormInputSurname";
+import FormInputTel from "../../components/atom/FormInputTel";
+import FormInputBirth from "../../components/atom/FormInputBirth";
 
 const Homepage = () => {
     type Contact = {
@@ -36,7 +36,6 @@ const Homepage = () => {
 
         setContacts((prev) => [...prev, contact]);
 
-        // reset form fields
         form.reset();
     };
 
@@ -67,7 +66,7 @@ const Homepage = () => {
                     <FormInputBirth inputName="birthday" inputId="birthday"/>
                 </FormGroup>
             </Form>
-            {/* Affichage du tableau des contacts ajoutés */}
+           
             {contacts.length > 0 && (
                 <section style={{ marginTop: 24 }}>
                     <h2>Contacts</h2>
