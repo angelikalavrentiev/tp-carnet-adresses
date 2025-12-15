@@ -99,13 +99,19 @@ const Homepage = () => {
                                         today.getDate() === birthDate.getDate() &&
                                         today.getMonth() === birthDate.getMonth();
 
+                                    let age = today.getFullYear() - birthDate.getFullYear();
+                                    const monthDiff = today.getMonth() - birthDate.getMonth();
+                                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                                        age--;
+                                    }
+
                                     return (
                                         <tr key={c.id} style={{ backgroundColor: isBirthday ? "#fef9c3" : "transparent" }}>
                                             <td>{c.name}</td>
                                             <td>{c.surname}</td>
                                             <td>{c.email}</td>
                                             <td>{c.tel}</td>
-                                            <td>{c.birthday}</td>
+                                            <td>{isBirthday ? `${c.birthday} (${age} ans)` : c.birthday}</td>
                                             <td>
                                                 <button 
                                                     style={{ color: "blue", marginRight: 8 }} 
