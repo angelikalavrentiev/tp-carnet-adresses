@@ -15,7 +15,6 @@ import { loadContacts, saveContacts } from "../../store/localStorage";
 
 const Homepage = () => {
     const [contacts, dispatch] = useReducer(contactReducer, loadContacts());
-    console.log("Homepage render, contacts length:", contacts.length);
 
     const [editingContact, setEditingContact] = useState<Contact | null>(null);
 
@@ -24,29 +23,24 @@ const Homepage = () => {
     }, [contacts]);
 
     const handleAddContact = (contact: Contact) => {
-        console.log("Adding contact:", contact);
         dispatch({ type: "ADD_CONTACT", payload: contact });
     };
 
     const handleEditContact = (contact: Contact) => {
-        console.log("Editing contact:", contact);
         setEditingContact(contact);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleUpdateContact = (contact: Contact) => {
-        console.log("Updating contact:", contact);
         dispatch({ type: "UPDATE_CONTACT", payload: contact });
         setEditingContact(null);
     };
 
     const handleCancelEdit = () => {
-        console.log("Cancelling edit");
         setEditingContact(null);
     };
 
     const handleRemoveContact = (id: number) => {
-        console.log("Removing contact with id:", id);
         dispatch({ type: "REMOVE_CONTACT", payload: id });
     };
 
@@ -82,20 +76,20 @@ const Homepage = () => {
             </Form>
            
             {contacts.length > 0 && (
-                <section className="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-8 shadow-2xl hover:bg-white/15 transition-all duration-300">
-                    <h2 className="text-4xl font-bold mb-6 text-center bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                <section className="mt-12 px-4">
+                    <h2 className="text-3xl font-bold mb-8 text-center">
                       Contacts
                     </h2>
                     <div className="overflow-x-auto">
-                        <table className="min-w-full bg-white/5 backdrop-blur-sm border-collapse rounded-xl overflow-hidden shadow-lg">
+                        <table className="w-full border-collapse">
                             <thead>
-                                <tr className="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-white">
-                                    <th className="py-4 px-6 text-left font-semibold">Nom</th>
-                                    <th className="py-4 px-6 text-left font-semibold">Prénom</th>
-                                    <th className="py-4 px-6 text-left font-semibold">Email</th>
-                                    <th className="py-4 px-6 text-left font-semibold">Téléphone</th>
-                                    <th className="py-4 px-6 text-left font-semibold">Date de naissance</th>
-                                    <th className="py-4 px-6 text-left font-semibold">Actions</th>
+                                <tr className="bg-gray-800">
+                                    <th className="">Nom</th>
+                                    <th className="">Prénom</th>
+                                    <th className="">Email</th>
+                                    <th className="">Téléphone</th>
+                                    <th className="">Date de naissance</th>
+                                    <th className="">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -113,23 +107,29 @@ const Homepage = () => {
                                     }
 
                                     return (
-                                        <tr key={c.id} className={`${isBirthday ? "bg-gradient-to-r from-yellow-400/20 to-orange-400/20 border-l-4 border-yellow-400 backdrop-blur-sm" : "hover:bg-white/10"} transition-all duration-300`}>
-                                            <td className="py-4 px-6 border-b border-white/10 text-white">{c.name}</td>
-                                            <td className="py-4 px-6 border-b border-white/10 text-white">{c.surname}</td>
-                                            <td className="py-4 px-6 border-b border-white/10 text-white">{c.email}</td>
-                                            <td className="py-4 px-6 border-b border-white/10 text-white">{c.tel}</td>
-                                            <td className="py-4 px-6 border-b border-white/10 text-white">{isBirthday ? `${c.birthday} (${age} ans)` : c.birthday}</td>
-                                            <td className="py-4 px-6 border-b border-white/10">
+                                        <tr key={c.id} className={`${isBirthday ? "bg-purple-500/10 border-l-4 border-purple-400" : "bg-white/5"} hover:bg-white/10 transition-all duration-200`}>
+                                            <td className="py-4 px-6 border-b border-white/5 text-white font-medium">{c.name}</td>
+                                            <td className="py-4 px-6 border-b border-white/5 text-gray-200">{c.surname}</td>
+                                            <td className="py-4 px-6 border-b border-white/5 text-gray-200">{c.email}</td>
+                                            <td className="py-4 px-6 border-b border-white/5 text-gray-200">{c.tel}</td>
+                                            <td className="py-4 px-6 border-b border-white/5 text-gray-200">{isBirthday ? `${c.birthday} (${age} ans)` : c.birthday}</td>
+                                            <td className="py-4 px-6 border-b border-white/5">
                                                 <button
-                                                    className="mr-3 px-4 py-2 bg-blue-500/80 backdrop-blur-sm text-white rounded-xl hover:bg-blue-600/80 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 border border-white/20"
+                                                    className="mr-3 px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 active:scale-95 transition-all duration-200 shadow-lg shadow-blue-500/30"
                                                     onClick={() => handleEditContact(c)}
                                                 >
                                                     Modifier
                                                 </button>
-                                                <button className="px-4 py-2 bg-red-500/80 backdrop-blur-sm text-white rounded-xl hover:bg-red-600/80 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 border border-white/20" onClick={() => handleRemoveContact(c.id)}>Supprimer</button>
+                                                <button 
+                                                    className="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 active:scale-95 transition-all duration-200 shadow-lg shadow-red-500/30" 
+                                                    onClick={() => handleRemoveContact(c.id)}
+                                                >
+                                                    Supprimer
+                                                </button>
                                             </td>
                                         </tr>
                                     );
+
                                 })}
                             </tbody>
                         </table>

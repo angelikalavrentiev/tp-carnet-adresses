@@ -44,7 +44,7 @@ const HomepageForm = ({ handleSubmit, editingContact, onCancel, children }: Home
   };
 
   return (
-    <form ref={formRef} onSubmit={onSubmit} className="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-8 mb-8 shadow-2xl hover:bg-white/15 transition-all duration-300">
+    <form ref={formRef} onSubmit={onSubmit} className="">
       {children}
 
       <div className="flex gap-4 mt-6">
@@ -53,7 +53,7 @@ const HomepageForm = ({ handleSubmit, editingContact, onCancel, children }: Home
           <button
             type="button"
             onClick={onCancel}
-            className="px-6 py-3 bg-gray-600/50 backdrop-blur-sm text-white rounded-xl hover:bg-gray-500/50 transition-all duration-300 shadow-lg border border-white/20"
+            className=""
           >
             Annuler
           </button>
