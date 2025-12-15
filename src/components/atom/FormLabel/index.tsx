@@ -5,12 +5,15 @@ interface FormLabelProps {
   inputId: string;
 }
 
-const FormLabel = ({ content, inputId }: FormLabelProps) => {
+const FormLabel = ({ content, inputId }) => {
   return (
-    <label htmlFor={inputId} className="formLabel">
-      {content}
-    </label>
-  );
-};
+  <label
+    htmlFor={inputId}
+    className="text-sm font-medium text-gray-700"
+  >
+    {content}
+  </label>
+);
 
+};
 export default FormLabel;
