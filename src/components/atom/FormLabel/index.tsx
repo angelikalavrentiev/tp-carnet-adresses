@@ -7,7 +7,7 @@ interface FormLabelProps {
 
 const FormLabel = ({ content, inputId }: FormLabelProps) => {
   return (
-    <label htmlFor={inputId} className="formLabel">
+    <label htmlFor={inputId} className="block text-sm font-medium text-gray-700 mb-1">
       {content}
     </label>
   );

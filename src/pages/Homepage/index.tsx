@@ -52,7 +52,7 @@ const Homepage = () => {
         <>
         <Header title="Bienvenue sur le carnet d'adresse" />
 
-        <main>
+        <main className="flex-1">
             <Form handleSubmit={editingContact ? handleUpdateContact : handleAddContact}
             editingContact={editingContact}  
             onCancel={handleCancelEdit}>
@@ -79,20 +79,22 @@ const Homepage = () => {
             </Form>
            
             {contacts.length > 0 && (
-                <section style={{ marginTop: 24 }}>
-                    <h2>Contacts</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nom</th>
-                                <th>Prénom</th>
-                                <th>Email</th>
-                                <th>Téléphone</th>
-                                <th>Date de naissance</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {contacts.map((c) => {
+                <section className="bg-white rounded-xl shadow-xl p-6 border border-gray-200">
+                    <h2 className="text-3xl font-bold mb-6 text-gray-800">Contacts</h2>
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full bg-white border-collapse">
+                            <thead>
+                                <tr className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+                                    <th className="py-4 px-6 text-left font-semibold">Nom</th>
+                                    <th className="py-4 px-6 text-left font-semibold">Prénom</th>
+                                    <th className="py-4 px-6 text-left font-semibold">Email</th>
+                                    <th className="py-4 px-6 text-left font-semibold">Téléphone</th>
+                                    <th className="py-4 px-6 text-left font-semibold">Date de naissance</th>
+                                    <th className="py-4 px-6 text-left font-semibold">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {contacts.map((c) => {
                                     const today = new Date();
                                     const birthDate = new Date(c.birthday);
                                     const isBirthday =
@@ -106,26 +108,27 @@ const Homepage = () => {
                                     }
 
                                     return (
-                                        <tr key={c.id} style={{ backgroundColor: isBirthday ? "#fef9c3" : "transparent" }}>
-                                            <td>{c.name}</td>
-                                            <td>{c.surname}</td>
-                                            <td>{c.email}</td>
-                                            <td>{c.tel}</td>
-                                            <td>{isBirthday ? `${c.birthday} (${age} ans)` : c.birthday}</td>
-                                            <td>
+                                        <tr key={c.id} className={`${isBirthday ? "bg-gradient-to-r from-yellow-100 to-orange-100 border-l-4 border-yellow-400" : "hover:bg-gray-50"} transition-colors duration-200`}>
+                                            <td className="py-4 px-6 border-b border-gray-200">{c.name}</td>
+                                            <td className="py-4 px-6 border-b border-gray-200">{c.surname}</td>
+                                            <td className="py-4 px-6 border-b border-gray-200">{c.email}</td>
+                                            <td className="py-4 px-6 border-b border-gray-200">{c.tel}</td>
+                                            <td className="py-4 px-6 border-b border-gray-200">{isBirthday ? `${c.birthday} (${age} ans)` : c.birthday}</td>
+                                            <td className="py-4 px-6 border-b border-gray-200">
                                                 <button 
-                                                    style={{ color: "blue", marginRight: 8 }} 
+                                                    className="mr-3 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 shadow-md" 
                                                     onClick={() => handleEditContact(c)}
                                                 >
                                                     Modifier
                                                 </button>
-                                                <button style={{ color: "red" }} onClick={() => handleRemoveContact(c.id)}>Supprimer</button>
+                                                <button className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 shadow-md" onClick={() => handleRemoveContact(c.id)}>Supprimer</button>
                                             </td>
                                         </tr>
                                     );
                                 })}
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </section>
             )}
         </main>

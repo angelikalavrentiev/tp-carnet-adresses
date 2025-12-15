@@ -5,7 +5,7 @@ interface FormGroupProps {
 }
 
 const FormGroup = ({ children }: FormGroupProps) => {
-  return <div className="formGroup">{children}</div>;
+  return <div className="mb-4">{children}</div>;
 }
 
 export default FormGroup;
