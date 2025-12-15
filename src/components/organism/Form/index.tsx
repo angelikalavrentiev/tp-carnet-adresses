@@ -5,9 +5,9 @@ import type { Contact } from "../../../store/contact";
 
 interface HomepageFormProps {
   handleSubmit: (contact: Contact) => void;
-  editingContact?: Contact | null; 
-  onCancel?: () => void; 
-  children: ReactNode;
+  editingContact?: Contact | null;
+  onCancel?: () => void;
+  children: React.ReactNode;
 }
 
 const HomepageForm = ({ handleSubmit, editingContact, onCancel, children }: HomepageFormProps) => {
@@ -44,16 +44,16 @@ const HomepageForm = ({ handleSubmit, editingContact, onCancel, children }: Home
   };
 
   return (
-    <form ref={formRef} onSubmit={onSubmit} className="bg-white p-8 rounded-xl shadow-xl mb-8 border border-gray-200">
+    <form ref={formRef} onSubmit={onSubmit} className="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-8 mb-8 shadow-2xl hover:bg-white/15 transition-all duration-300">
       {children}
 
       <div className="flex gap-4 mt-6">
         <FormSubmit content={editingContact ? "Mettre à jour" : "Ajouter"} />
         {editingContact && onCancel && (
-          <button 
-            type="button" 
+          <button
+            type="button"
             onClick={onCancel}
-            className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200 shadow-md"
+            className="px-6 py-3 bg-gray-600/50 backdrop-blur-sm text-white rounded-xl hover:bg-gray-500/50 transition-all duration-300 shadow-lg border border-white/20"
           >
             Annuler
           </button>

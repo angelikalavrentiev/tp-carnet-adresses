@@ -14,36 +14,39 @@ import type { Contact } from "../../store/contact";
 import { loadContacts, saveContacts } from "../../store/localStorage";
 
 const Homepage = () => {
-    const [contacts, dispatch] = useReducer(contactReducer, []);
-    const [editingContact, setEditingContact] = useState<Contact | null>(null);
+    const [contacts, dispatch] = useReducer(contactReducer, loadContacts());
+    console.log("Homepage render, contacts length:", contacts.length);
 
-    useEffect(() => {
-        dispatch({ type: "SET_CONTACTS", payload: loadContacts() });
-    }, []);
+    const [editingContact, setEditingContact] = useState<Contact | null>(null);
 
     useEffect(() => {
         saveContacts(contacts);
     }, [contacts]);
 
     const handleAddContact = (contact: Contact) => {
+        console.log("Adding contact:", contact);
         dispatch({ type: "ADD_CONTACT", payload: contact });
     };
 
     const handleEditContact = (contact: Contact) => {
+        console.log("Editing contact:", contact);
         setEditingContact(contact);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleUpdateContact = (contact: Contact) => {
+        console.log("Updating contact:", contact);
         dispatch({ type: "UPDATE_CONTACT", payload: contact });
         setEditingContact(null);
     };
 
     const handleCancelEdit = () => {
+        console.log("Cancelling edit");
         setEditingContact(null);
     };
 
     const handleRemoveContact = (id: number) => {
+        console.log("Removing contact with id:", id);
         dispatch({ type: "REMOVE_CONTACT", payload: id });
     };
 
@@ -79,12 +82,14 @@ const Homepage = () => {
             </Form>
            
             {contacts.length > 0 && (
-                <section className="bg-white rounded-xl shadow-xl p-6 border border-gray-200">
-                    <h2 className="text-3xl font-bold mb-6 text-gray-800">Contacts</h2>
+                <section className="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-8 shadow-2xl hover:bg-white/15 transition-all duration-300">
+                    <h2 className="text-4xl font-bold mb-6 text-center bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                      Contacts
+                    </h2>
                     <div className="overflow-x-auto">
-                        <table className="min-w-full bg-white border-collapse">
+                        <table className="min-w-full bg-white/5 backdrop-blur-sm border-collapse rounded-xl overflow-hidden shadow-lg">
                             <thead>
-                                <tr className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+                                <tr className="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-white">
                                     <th className="py-4 px-6 text-left font-semibold">Nom</th>
                                     <th className="py-4 px-6 text-left font-semibold">Prénom</th>
                                     <th className="py-4 px-6 text-left font-semibold">Email</th>
@@ -108,20 +113,20 @@ const Homepage = () => {
                                     }
 
                                     return (
-                                        <tr key={c.id} className={`${isBirthday ? "bg-gradient-to-r from-yellow-100 to-orange-100 border-l-4 border-yellow-400" : "hover:bg-gray-50"} transition-colors duration-200`}>
-                                            <td className="py-4 px-6 border-b border-gray-200">{c.name}</td>
-                                            <td className="py-4 px-6 border-b border-gray-200">{c.surname}</td>
-                                            <td className="py-4 px-6 border-b border-gray-200">{c.email}</td>
-                                            <td className="py-4 px-6 border-b border-gray-200">{c.tel}</td>
-                                            <td className="py-4 px-6 border-b border-gray-200">{isBirthday ? `${c.birthday} (${age} ans)` : c.birthday}</td>
-                                            <td className="py-4 px-6 border-b border-gray-200">
-                                                <button 
-                                                    className="mr-3 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 shadow-md" 
+                                        <tr key={c.id} className={`${isBirthday ? "bg-gradient-to-r from-yellow-400/20 to-orange-400/20 border-l-4 border-yellow-400 backdrop-blur-sm" : "hover:bg-white/10"} transition-all duration-300`}>
+                                            <td className="py-4 px-6 border-b border-white/10 text-white">{c.name}</td>
+                                            <td className="py-4 px-6 border-b border-white/10 text-white">{c.surname}</td>
+                                            <td className="py-4 px-6 border-b border-white/10 text-white">{c.email}</td>
+                                            <td className="py-4 px-6 border-b border-white/10 text-white">{c.tel}</td>
+                                            <td className="py-4 px-6 border-b border-white/10 text-white">{isBirthday ? `${c.birthday} (${age} ans)` : c.birthday}</td>
+                                            <td className="py-4 px-6 border-b border-white/10">
+                                                <button
+                                                    className="mr-3 px-4 py-2 bg-blue-500/80 backdrop-blur-sm text-white rounded-xl hover:bg-blue-600/80 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 border border-white/20"
                                                     onClick={() => handleEditContact(c)}
                                                 >
                                                     Modifier
                                                 </button>
-                                                <button className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 shadow-md" onClick={() => handleRemoveContact(c.id)}>Supprimer</button>
+                                                <button className="px-4 py-2 bg-red-500/80 backdrop-blur-sm text-white rounded-xl hover:bg-red-600/80 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 border border-white/20" onClick={() => handleRemoveContact(c.id)}>Supprimer</button>
                                             </td>
                                         </tr>
                                     );
