@@ -14,45 +14,40 @@ import type { Contact } from "../../store/contact";
 import { loadContacts, saveContacts } from "../../store/localStorage";
 
 const Homepage = () => {
-    const [contacts, dispatch] = useReducer(contactReducer, []);
-    const [editingContact, setEditingContact] = useState<Contact | null>(null);
+  const [contacts, dispatch] = useReducer(contactReducer, loadContacts());
+  const [editingContact, setEditingContact] = useState<Contact | null>(null);
 
-    useEffect(() => {
-        dispatch({ type: "SET_CONTACTS", payload: loadContacts() });
-    }, []);
+  useEffect(() => {
+    saveContacts(contacts);
+  }, [contacts]);
 
-    useEffect(() => {
-        saveContacts(contacts);
-    }, [contacts]);
+  const handleAddContact = (contact: Contact) => {
+    dispatch({ type: "ADD_CONTACT", payload: contact });
+  };
 
-    const handleAddContact = (contact: Contact) => {
-        dispatch({ type: "ADD_CONTACT", payload: contact });
-    };
+  const handleEditContact = (contact: Contact) => {
+    setEditingContact(contact);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-    const handleEditContact = (contact: Contact) => {
-        setEditingContact(contact);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+  const handleUpdateContact = (contact: Contact) => {
+    dispatch({ type: "UPDATE_CONTACT", payload: contact });
+    setEditingContact(null);
+  };
 
-    const handleUpdateContact = (contact: Contact) => {
-        dispatch({ type: "UPDATE_CONTACT", payload: contact });
-        setEditingContact(null);
-    };
+  const handleCancelEdit = () => {
+    setEditingContact(null);
+  };
 
-    const handleCancelEdit = () => {
-        setEditingContact(null);
-    };
+  const handleRemoveContact = (id: number) => {
+    dispatch({ type: "REMOVE_CONTACT", payload: id });
+  };
 
-    const handleRemoveContact = (id: number) => {
-        dispatch({ type: "REMOVE_CONTACT", payload: id });
-    };
-
-
-    return (
-    <div  className="min-h-screen flex flex-col bg-gray-50">
+  return (
+    <div className="min-h-screen flex flex-col bg-gray-900 text-white px-4 sm:px-6 lg:px-8">
       <Header title="Bienvenue sur le carnet d'adresse" />
 
-      <main className="flex-grow max-w-5xl mx-auto w-full px-6 py-8">
+      <main className="flex-1 max-w-5xl mx-auto w-full">
         <Form
           handleSubmit={editingContact ? handleUpdateContact : handleAddContact}
           editingContact={editingContact}
@@ -60,47 +55,48 @@ const Homepage = () => {
         >
           <FormGroup>
             <FormLabel content="Nom" inputId="name" />
-            <FormInputName inputName="name" inputId="name" />
+            <FormInputName inputId="name" inputName="name" />
           </FormGroup>
 
           <FormGroup>
             <FormLabel content="Prénom" inputId="surname" />
-            <FormInputSurname inputName="surname" inputId="surname" />
+            <FormInputSurname inputId="surname" inputName="surname" />
           </FormGroup>
 
           <FormGroup>
             <FormLabel content="Email" inputId="email" />
-            <FormInputEmail inputName="email" inputId="email" />
+            <FormInputEmail inputId="email" inputName="email" />
           </FormGroup>
 
           <FormGroup>
             <FormLabel content="Téléphone" inputId="tel" />
-            <FormInputTel inputName="tel" inputId="tel" />
+            <FormInputTel inputId="tel" inputName="tel" />
           </FormGroup>
 
           <FormGroup>
             <FormLabel content="Date de naissance" inputId="birthday" />
-            <FormInputBirth inputName="birthday" inputId="birthday" />
+            <FormInputBirth inputId="birthday" inputName="birthday" />
           </FormGroup>
         </Form>
 
         {contacts.length > 0 && (
-          <section className="mt-10">
-            <h2 className="text-xl font-semibold mb-4">Contacts</h2>
-
-            <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
-              <table className="min-w-full border-collapse">
-                <thead className="bg-gray-100">
-                  <tr>
-                    <th className="px-4 py-2 text-left">Nom</th>
-                    <th className="px-4 py-2 text-left">Prénom</th>
-                    <th className="px-4 py-2 text-left">Email</th>
-                    <th className="px-4 py-2 text-left">Téléphone</th>
-                    <th className="px-4 py-2 text-left">Date de naissance</th>
-                    <th className="px-4 py-2 text-left">Actions</th>
+          <section className="mt-10 backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-8 shadow-2xl hover:bg-white/15 transition-all duration-300">
+            <h2 className="text-4xl font-bold mb-6 text-center bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              Contacts
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-white/5 backdrop-blur-sm border-collapse rounded-xl overflow-hidden shadow-lg">
+                <thead>
+                  <tr className="bg-blue-600 text-white">
+                    <th className="py-4 px-6 text-left font-semibold">Nom</th>
+                    <th className="py-4 px-6 text-left font-semibold">Prénom</th>
+                    <th className="py-4 px-6 text-left font-semibold">Email</th>
+                    <th className="py-4 px-6 text-left font-semibold">Téléphone</th>
+                    <th className="py-4 px-6 text-left font-semibold">Date de naissance</th>
+                    <th className="py-4 px-6 text-left font-semibold">Actions</th>
                   </tr>
-                </thead>
 
+                </thead>
                 <tbody>
                   {contacts.map((c) => {
                     const today = new Date();
@@ -109,25 +105,37 @@ const Homepage = () => {
                       today.getDate() === birthDate.getDate() &&
                       today.getMonth() === birthDate.getMonth();
 
+                    let age = today.getFullYear() - birthDate.getFullYear();
+                    const monthDiff = today.getMonth() - birthDate.getMonth();
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                      age--;
+                    }
+
                     return (
                       <tr
                         key={c.id}
-                        className={isBirthday ? "bg-yellow-100" : "bg-white"}
+                        className="transition-all duration-300 hover:bg-white/10"
                       >
-                        <td className="px-4 py-2">{c.name}</td>
-                        <td className="px-4 py-2">{c.surname}</td>
-                        <td className="px-4 py-2">{c.email}</td>
-                        <td className="px-4 py-2">{c.tel}</td>
-                        <td className="px-4 py-2">{c.birthday}</td>
-                        <td className="px-4 py-2">
+                        <td className="py-4 px-6 border-b border-white/10">{c.name}</td>
+                        <td className="py-4 px-6 border-b border-white/10">{c.surname}</td>
+                        <td className="py-4 px-6 border-b border-white/10">{c.email}</td>
+                        <td className="py-4 px-6 border-b border-white/10">{c.tel}</td>
+                        <td
+                          className={`py-4 px-6 border-b border-white/10 ${
+                            isBirthday ? "bg-green-200/50 rounded-md font-semibold" : ""
+                          }`}
+                        >
+                          {isBirthday ? `${c.birthday} (${age} ans)` : c.birthday}
+                        </td>
+                        <td className="py-4 px-6 border-b border-white/10 flex gap-2">
                           <button
-                            className="text-blue-600 hover:underline mr-3"
+                            className="px-4 py-2 bg-blue-500/80 backdrop-blur-sm text-white rounded-xl hover:bg-blue-600/80 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 border border-white/20"
                             onClick={() => handleEditContact(c)}
                           >
                             Modifier
                           </button>
                           <button
-                            className="text-red-600 hover:underline"
+                            className="px-4 py-2 bg-red-500/80 backdrop-blur-sm text-white rounded-xl hover:bg-red-600/80 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 border border-white/20"
                             onClick={() => handleRemoveContact(c.id)}
                           >
                             Supprimer

@@ -1,13 +1,13 @@
 import { useEffect, useRef } from "react";
 import FormSubmit from "../../atom/FormSubmit";
-import type { FormEvent, ReactNode } from "react";
+import type { FormEvent } from "react";
 import type { Contact } from "../../../store/contact";
 
 interface HomepageFormProps {
   handleSubmit: (contact: Contact) => void;
-  editingContact?: Contact | null; 
-  onCancel?: () => void; 
-  children: ReactNode;
+  editingContact?: Contact | null;
+  onCancel?: () => void;
+  children: React.ReactNode;
 }
 
 const HomepageForm = ({ handleSubmit, editingContact, onCancel, children }: HomepageFormProps) => {
@@ -16,11 +16,11 @@ const HomepageForm = ({ handleSubmit, editingContact, onCancel, children }: Home
   useEffect(() => {
     if (editingContact && formRef.current) {
       const form = formRef.current;
-      form.name.value = editingContact.name;
-      form.surname.value = editingContact.surname;
-      form.email.value = editingContact.email;
-      form.tel.value = editingContact.tel;
-      form.birthday.value = editingContact.birthday;
+      (form.elements.namedItem('name') as HTMLInputElement).value = editingContact.name;
+      (form.elements.namedItem('surname') as HTMLInputElement).value = editingContact.surname;
+      (form.elements.namedItem('email') as HTMLInputElement).value = editingContact.email;
+      (form.elements.namedItem('tel') as HTMLInputElement).value = editingContact.tel;
+      (form.elements.namedItem('birthday') as HTMLInputElement).value = editingContact.birthday;
     } else if (!editingContact && formRef.current) {
       formRef.current.reset();
     }
@@ -32,11 +32,11 @@ const HomepageForm = ({ handleSubmit, editingContact, onCancel, children }: Home
 
     const newContact: Contact = {
       id: editingContact ? editingContact.id : Date.now(),
-      name: form.name.value,
-      surname: form.surname.value,
-      email: form.email.value,
-      tel: form.tel.value,
-      birthday: form.birthday.value,
+      name: (form.elements.namedItem('name') as HTMLInputElement).value,
+      surname: (form.elements.namedItem('surname') as HTMLInputElement).value,
+      email: (form.elements.namedItem('email') as HTMLInputElement).value,
+      tel: (form.elements.namedItem('tel') as HTMLInputElement).value,
+      birthday: (form.elements.namedItem('birthday') as HTMLInputElement).value,
     };
 
     handleSubmit(newContact);
@@ -44,16 +44,37 @@ const HomepageForm = ({ handleSubmit, editingContact, onCancel, children }: Home
   };
 
   return (
-    <form ref={formRef} onSubmit={onSubmit} className="homepageForm">
+    <form
+      ref={formRef}
+      onSubmit={onSubmit}
+      className="
+        backdrop-blur-md bg-white/10
+        border border-white/20
+        rounded-2xl
+        p-8 mb-8
+        shadow-2xl
+        hover:bg-white/15
+        transition-all duration-300
+      "
+    >
       {children}
 
-      <div className="formButtons">
+      <div className="flex gap-4 mt-6">
         <FormSubmit content={editingContact ? "Mettre à jour" : "Ajouter"} />
         {editingContact && onCancel && (
-          <button 
-            type="button" 
+          <button
+            type="button"
             onClick={onCancel}
-            className="formCancelButton"
+            className="
+              px-6 py-2
+              bg-gray-600/50
+              backdrop-blur-sm
+              text-white
+              rounded-md
+              hover:bg-gray-500/50
+              transition-all duration-200
+              shadow
+            "
           >
             Annuler
           </button>
